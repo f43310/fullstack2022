@@ -15,18 +15,16 @@ const Content = ({ parts }) => (
 );
 
 const Course = ({ course }) => {
-  let sum_fn = (arr) => {
-    let sum = 0;
-    arr.forEach((item) => {
-      sum += item.exercises;
-    });
-    return sum;
-  };
+  const init = 0;
+  const total = course.parts.reduce((s, p) => {
+    console.log('what is happening', s, p);
+    return s + p.exercises;
+  }, init);
   return (
     <div>
       <Header course={course.name} />
       <Content parts={course.parts} />
-      <Total sum={sum_fn(course.parts)} />
+      <Total sum={total} />
     </div>
   );
 };
