@@ -1,5 +1,5 @@
 const Header = ({ course }) => <h1>{course}</h1>;
-
+const Total = ({ sum }) => <p>Total of {sum} exercises </p>;
 const Part = ({ part }) => (
   <p>
     {part.name} {part.exercises}
@@ -15,10 +15,18 @@ const Content = ({ parts }) => (
 );
 
 const Course = ({ course }) => {
+  let sum_fn = (arr) => {
+    let sum = 0;
+    arr.forEach((item) => {
+      sum += item.exercises;
+    });
+    return sum;
+  };
   return (
     <div>
       <Header course={course.name} />
       <Content parts={course.parts} />
+      <Total sum={sum_fn(course.parts)} />
     </div>
   );
 };
