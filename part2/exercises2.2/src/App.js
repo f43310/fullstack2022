@@ -1,57 +1,42 @@
-import React from 'react';
-import Course from './components/Course';
+import React, { useState } from 'react';
+const Number = ({ name }) => {
+  return <li>{name}</li>;
+};
 const App = () => {
-  const courses = [
-    {
-      name: 'Half Stack application development',
-      id: 1,
-      parts: [
-        {
-          name: 'Fundamentals of React',
-          exercises: 10,
-          id: 1,
-        },
-        {
-          name: 'Using props to pass data',
-          exercises: 7,
-          id: 2,
-        },
-        {
-          name: 'State of a component',
-          exercises: 14,
-          id: 3,
-        },
-        {
-          name: 'Redux',
-          exercises: 11,
-          id: 4,
-        },
-      ],
-    },
-    {
-      name: 'Node.js',
-      id: 2,
-      parts: [
-        {
-          name: 'Routing',
-          exercises: 3,
-          id: 1,
-        },
-        {
-          name: 'Middlewares',
-          exercises: 7,
-          id: 2,
-        },
-      ],
-    },
-  ];
+  const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]);
+  const [newName, setNewName] = useState('');
 
+  const addNumber = (event) => {
+    event.preventDefault();
+    const numberObject = {
+      name: newName,
+    };
+
+    setPersons(persons.concat(numberObject));
+    setNewName('');
+  };
+  const handleNumberChange = (event) => {
+    console.log(event.target.value);
+    setNewName(event.target.value);
+  };
   return (
     <div>
-      <h1>Web development curriculum</h1>
-      {courses.map((course) => (
-        <Course key={course.id} course={course} />
-      ))}
+      <h2>Phonebook</h2>
+      <form onSubmit={addNumber}>
+        <div>
+          name: <input value={newName} onChange={handleNumberChange} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+      <div>debug: {newName}</div>
+      <h2>Numbers</h2>
+      <ul>
+        {persons.map((person) => (
+          <Number key={person.name} name={person.name} />
+        ))}
+      </ul>
     </div>
   );
 };
