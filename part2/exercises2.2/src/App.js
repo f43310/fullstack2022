@@ -12,6 +12,14 @@ const App = () => {
       name: newName,
     };
 
+    const found = persons.find(
+      (element) => JSON.stringify(numberObject) === JSON.stringify(element)
+    );
+    if (found !== undefined) {
+      alert(`${numberObject.name} is already added to phonebook`);
+      return false;
+    }
+
     setPersons(persons.concat(numberObject));
     setNewName('');
   };
