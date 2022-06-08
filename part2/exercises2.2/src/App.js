@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
-const Person = ({ person }) => {
-  return (
-    <li>
-      {person.name} {person.number}
-    </li>
-  );
-};
+import Filter from './components/Filter';
+import PersonForm from './components/PersonForm';
+import Persons from './components/Persons';
 const App = () => {
   const init = [
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -65,28 +61,14 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with
-        <input type="text" value={filterName} onChange={handleFilterChange} />
-      </div>
+      <Filter filterName={filterName} handleFilterChange={handleFilterChange} />
       <h2>add a new</h2>
-      <form onSubmit={addNumber}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-          <br />
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <div>debug: {newName}</div>
+      <PersonForm
+        status={(newName, newNumber)}
+        handle={(handleNameChange, handleNumberChange, addNumber)}
+      />
       <h2>Numbers</h2>
-      <ul>
-        {personsFilter.map((person) => (
-          <Person key={person.id} person={person} />
-        ))}
-      </ul>
+      <Persons personsFilter={personsFilter} />
     </div>
   );
 };
