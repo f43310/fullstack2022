@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-const Number = ({ name, number }) => {
+const Person = ({ person }) => {
   return (
     <li>
-      {name} {number}
+      {person.name} {person.number}
     </li>
   );
 };
@@ -17,6 +17,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filterName, setFilterName] = useState('');
+  const [personsFilter, setPersonsFilter] = useState(persons);
 
   const addNumber = (event) => {
     event.preventDefault();
@@ -36,6 +37,7 @@ const App = () => {
     }
 
     setPersons(persons.concat(numberObject));
+    setPersonsFilter(persons.concat(numberObject));
     setNewName('');
     setNewNumber('');
   };
@@ -52,18 +54,19 @@ const App = () => {
     const filter_name = event.target.value || '';
     setFilterName(filter_name);
     console.log('filterName', filter_name);
+
     let newArr = persons.filter((person) => {
       console.log(person.name, filter_name);
       return person.name.toLowerCase().includes(filter_name);
     });
     console.log(newArr);
-    setPersons(newArr);
+    setPersonsFilter(newArr);
   };
   return (
     <div>
       <h2>Phonebook</h2>
       <div>
-        filter shown with{' '}
+        filter shown with
         <input type="text" value={filterName} onChange={handleFilterChange} />
       </div>
       <h2>add a new</h2>
@@ -80,8 +83,8 @@ const App = () => {
       <div>debug: {newName}</div>
       <h2>Numbers</h2>
       <ul>
-        {persons.map((person) => (
-          <Number key={person.id} name={person.name} number={person.number} />
+        {personsFilter.map((person) => (
+          <Person key={person.id} person={person} />
         ))}
       </ul>
     </div>
