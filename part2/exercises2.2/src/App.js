@@ -68,8 +68,8 @@ const App = () => {
       <Filter filterName={filterName} handleFilterChange={handleFilterChange} />
       <h2>add a new</h2>
       <PersonForm
-        status={(newName, newNumber)}
-        handle={(handleNameChange, handleNumberChange, addNumber)}
+        status={{ newName, newNumber }}
+        handle={{ handleNameChange, handleNumberChange, addNumber }}
       />
       <h2>Numbers</h2>
       <Persons personsFilter={personsFilter} />
