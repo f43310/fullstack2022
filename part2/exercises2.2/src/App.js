@@ -6,11 +6,13 @@ const App = () => {
   const [search, setSearch] = useState('')
   const [countries, setCountries] = useState([])
   const [result, setResult] = useState([])
+
   useEffect(() => {
     axios.get('https://restcountries.com/v3.1/all').then((response) => {
       setCountries(response.data)
     })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleSearchChange = (event) => {
     console.log(event.target.value)
     setResult(

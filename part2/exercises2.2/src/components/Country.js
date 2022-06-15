@@ -8,7 +8,7 @@ const Country = ({ info }) => {
         <span>capital</span> <span>{info.capital}</span>
       </div>
       <div>
-        <span>area</span> <span>{info.area}</span>
+        <span>area</span> <span>{info.area} km²</span>
       </div>
       <h2>languages:</h2>
       <ul>
