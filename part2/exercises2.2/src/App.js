@@ -1,78 +1,32 @@
 import React, { useState, useEffect } from 'react'
-import Filter from './components/Filter'
-import PersonForm from './components/PersonForm'
-import Persons from './components/Persons'
 import axios from 'axios'
+import Countries from './components/Countries'
+// import axios from 'axios'
 const App = () => {
-  const [persons, setPersons] = useState([])
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
-  const [filterName, setFilterName] = useState('')
-  const [personsFilter, setPersonsFilter] = useState([])
-
+  const [search, setSearch] = useState('')
+  const [countries, setCountries] = useState([])
+  const [result, setResult] = useState([])
   useEffect(() => {
-    console.log('effect')
-    axios.get('http://localhost:3001/persons').then((response) => {
-      console.log('promise fulfilled')
-      setPersons(response.data)
-      setPersonsFilter(response.data)
+    axios.get('https://restcountries.com/v3.1/all').then((response) => {
+      setCountries(response.data)
     })
-  }, [])
-
-  const addNumber = (event) => {
-    event.preventDefault()
-    const numberObject = {
-      name: newName,
-      number: newNumber,
-      id: persons.length + 1,
-    }
-
-    const found = persons.find(
-      (element) =>
-        JSON.stringify(numberObject.name) === JSON.stringify(element.name)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  const handleSearchChange = (event) => {
+    console.log(event.target.value)
+    setResult(
+      countries.filter((country) =>
+        country.name.common
+          .toLowerCase()
+          .includes(event.target.value.toLowerCase())
+      )
     )
-    if (found !== undefined) {
-      alert(`${numberObject.name} is already added to phonebook`)
-      return false
-    }
-
-    setPersons(persons.concat(numberObject))
-    setPersonsFilter(personsFilter.concat(numberObject))
-    setNewName('')
-    setNewNumber('')
-  }
-  const handleNameChange = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
-  }
-  const handleNumberChange = (event) => {
-    console.log(event.target.value)
-    setNewNumber(event.target.value)
-  }
-  const handleFilterChange = (event) => {
-    console.log(event.target.value)
-    const filter_name = event.target.value || ''
-    setFilterName(filter_name)
-    console.log('filterName', filter_name)
-
-    let newArr = persons.filter((person) => {
-      console.log(person.name, filter_name)
-      return person.name.toLowerCase().includes(filter_name)
-    })
-    console.log(newArr)
-    setPersonsFilter(newArr)
+    setSearch(event.target.value)
   }
   return (
     <div>
-      <h2>Phonebook</h2>
-      <Filter filterName={filterName} handleFilterChange={handleFilterChange} />
-      <h2>add a new</h2>
-      <PersonForm
-        status={{ newName, newNumber }}
-        handle={{ handleNameChange, handleNumberChange, addNumber }}
-      />
-      <h2>Numbers</h2>
-      <Persons personsFilter={personsFilter} />
+      <span>find countries</span>{' '}
+      <input type="text" value={search} onChange={handleSearchChange} />
+      <Countries search={result} />
     </div>
   )
 }
