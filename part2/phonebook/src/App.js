@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import axios from 'axios'
+import personsService from './services/persons'
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
@@ -11,11 +11,9 @@ const App = () => {
   const [personsFilter, setPersonsFilter] = useState([])
 
   useEffect(() => {
-    console.log('effect')
-    axios.get('http://localhost:3001/persons').then((response) => {
-      console.log('promise fulfilled')
-      setPersons(response.data)
-      setPersonsFilter(response.data)
+    personsService.getAll().then((persons) => {
+      setPersons(persons)
+      setPersonsFilter(persons)
     })
   }, [])
 
@@ -36,14 +34,12 @@ const App = () => {
       return false
     }
 
-    axios
-      .post('http://localhost:3001/persons', numberObject)
-      .then((response) => {
-        setPersons(persons.concat(response.data))
-        setPersonsFilter(personsFilter.concat(response.data))
-        setNewName('')
-        setNewNumber('')
-      })
+    personsService.create(numberObject).then((person) => {
+      setPersons(persons.concat(person))
+      setPersonsFilter(personsFilter.concat(person))
+      setNewName('')
+      setNewNumber('')
+    })
   }
   const handleNameChange = (event) => {
     console.log(event.target.value)
