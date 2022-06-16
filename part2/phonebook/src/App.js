@@ -29,8 +29,26 @@ const App = () => {
       (element) =>
         JSON.stringify(numberObject.name) === JSON.stringify(element.name)
     )
+    // console.log(found)
     if (found !== undefined) {
-      alert(`${numberObject.name} is already added to phonebook`)
+      if (
+        window.confirm(
+          `${found.name} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        personsService.update(found.id, numberObject).then((returnedPerson) => {
+          setPersons(
+            persons.map((person) =>
+              person.id !== found.id ? person : returnedPerson
+            )
+          )
+          setPersonsFilter(
+            personsFilter.map((person) =>
+              person.id !== found.id ? person : returnedPerson
+            )
+          )
+        })
+      }
       return false
     }
 
