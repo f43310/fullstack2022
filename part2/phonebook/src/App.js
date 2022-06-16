@@ -62,6 +62,18 @@ const App = () => {
     console.log(newArr)
     setPersonsFilter(newArr)
   }
+
+  const handleDel = (id) => {
+    const item = persons.filter((p) => p.id === id)
+    console.log(item)
+    if (window.confirm(`Del ${item[0].name} ?`)) {
+      personsService
+        .del(id)
+        .then((res) =>
+          setPersonsFilter(personsFilter.filter((n) => n.id !== id))
+        )
+    }
+  }
   return (
     <div>
       <h2>Phonebook</h2>
@@ -72,7 +84,7 @@ const App = () => {
         handle={{ handleNameChange, handleNumberChange, addNumber }}
       />
       <h2>Numbers</h2>
-      <Persons personsFilter={personsFilter} />
+      <Persons personsFilter={personsFilter} handleDel={handleDel} />
     </div>
   )
 }
