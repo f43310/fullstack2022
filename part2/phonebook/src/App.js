@@ -39,24 +39,35 @@ const App = () => {
           `${found.name} is already added to phonebook, replace the old number with a new one?`
         )
       ) {
-        setErrorMessage(
-          `${found.name} is already added to phonebook, replace the old number with a new one.`
-        )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-        personsService.update(found.id, numberObject).then((returnedPerson) => {
-          setPersons(
-            persons.map((person) =>
-              person.id !== found.id ? person : returnedPerson
+        personsService
+          .update(found.id, numberObject)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== found.id ? person : returnedPerson
+              )
             )
-          )
-          setPersonsFilter(
-            personsFilter.map((person) =>
-              person.id !== found.id ? person : returnedPerson
+            setPersonsFilter(
+              personsFilter.map((person) =>
+                person.id !== found.id ? person : returnedPerson
+              )
             )
-          )
-        })
+            setErrorMessage(
+              `${found.name} is already added to phonebook, replace the old number with a new one.`
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+          })
+          .catch((err) => {
+            console.log(err)
+            setErrorMessage(
+              `Record of ${found.name} is already deleted from server`
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+          })
       }
       return false
     }
