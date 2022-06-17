@@ -3,12 +3,15 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personsService from './services/persons'
+import Notification from './components/Notification '
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilterName] = useState('')
   const [personsFilter, setPersonsFilter] = useState([])
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personsService.getAll().then((persons) => {
@@ -36,6 +39,12 @@ const App = () => {
           `${found.name} is already added to phonebook, replace the old number with a new one?`
         )
       ) {
+        setErrorMessage(
+          `${found.name} is already added to phonebook, replace the old number with a new one.`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
         personsService.update(found.id, numberObject).then((returnedPerson) => {
           setPersons(
             persons.map((person) =>
@@ -57,6 +66,10 @@ const App = () => {
       setPersonsFilter(personsFilter.concat(person))
       setNewName('')
       setNewNumber('')
+      setErrorMessage(`${person.name} is already added to phonebook.`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     })
   }
   const handleNameChange = (event) => {
@@ -95,6 +108,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} />
       <Filter filterName={filterName} handleFilterChange={handleFilterChange} />
       <h2>add a new</h2>
       <PersonForm
