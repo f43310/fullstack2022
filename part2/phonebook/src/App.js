@@ -20,12 +20,18 @@ const App = () => {
     })
   }, [])
 
+  const notify = (message, type = 'info') => {
+    setErrorMessage({ message, type })
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
+
   const addNumber = (event) => {
     event.preventDefault()
     const numberObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
     }
 
     const found = persons.find(
@@ -40,7 +46,7 @@ const App = () => {
         )
       ) {
         personsService
-          .update(found.id, numberObject)
+          .update(found.id, { ...found, number: newNumber })
           .then((returnedPerson) => {
             setPersons(
               persons.map((person) =>
@@ -52,36 +58,35 @@ const App = () => {
                 person.id !== found.id ? person : returnedPerson
               )
             )
-            setErrorMessage(
-              `${found.name} is already added to phonebook, replace the old number with a new one.`
-            )
-            setTimeout(() => {
-              setErrorMessage(null)
-            }, 5000)
+            notify(`Updated info of ${found.name}`)
+            setNewName('')
+            setNewNumber('')
           })
           .catch((err) => {
-            console.log(err)
-            setErrorMessage(
-              `Record of ${found.name} is already deleted from server`
-            )
-            setTimeout(() => {
-              setErrorMessage(null)
-            }, 5000)
+            console.log(err, '2222222222')
+            notify(err.response.data.error, 'alert')
+            // setPersons(persons.filter((p) => p.id !== found.id))
+            // setPersonsFilter(personsFilter.filter((p) => p.id !== found.id))
           })
+        return false
       }
-      return false
     }
 
-    personsService.create(numberObject).then((person) => {
-      setPersons(persons.concat(person))
-      setPersonsFilter(personsFilter.concat(person))
-      setNewName('')
-      setNewNumber('')
-      setErrorMessage(`${person.name} is already added to phonebook.`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    })
+    personsService
+      .create(numberObject)
+      .then((person) => {
+        setPersons(persons.concat(person))
+        setPersonsFilter(personsFilter.concat(person))
+        setNewName('')
+        setNewNumber('')
+        notify(`${person.name} is already added to phonebook.`)
+      })
+      .catch((error) => {
+        // this is the way to access the error message
+        console.log(error.response.data, '11111111111111111')
+        notify(`${error.response.data.error}`, 'alert')
+        return
+      })
   }
   const handleNameChange = (event) => {
     console.log(event.target.value)
@@ -119,7 +124,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={errorMessage} />
+      <Notification notification={errorMessage} />
       <Filter filterName={filterName} handleFilterChange={handleFilterChange} />
       <h2>add a new</h2>
       <PersonForm
